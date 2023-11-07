@@ -1,0 +1,57 @@
+/* Styles CSS pour le diaporama */
+
+/*
+Code basé sur le CSS Duotone Generator
+https://cssduotone.com/
+*/
+
+:root {
+  --base: #000000;
+  /*--ar-blend:          screen;*/
+  --blur: 0px;
+  --av-blend: exclusion;
+  --avant-plan: #1d1d37;
+  --opacite: 1;
+}
+
+.img-wrapper {
+  background-color: var(--base);
+  display: flex;
+  flex: 1 1 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.img-wrapper img {
+  filter: grayscale(100%) contrast(1) blur(var(--blur));
+  flex: 1 0 100%;
+  height: 100%;
+  max-width: 100%;
+  /*mix-blend-mode:      var(--ar-blend);*/
+  object-fit: cover;
+  object-position: 50% 50%; /* 50% 50% (centre - default), choix = centre, top ou bottom, right ou left ex: right top*/
+  opacity: var(--opacite);
+  padding: 0;
+  position: absolute;
+  margin: 0;
+  width: 100%;
+}
+
+.img-wrapper::before {
+  background-color: var(--avant-plan);
+  bottom: 0;
+  content: "";
+  height: 100%;
+  left: 0;
+  mix-blend-mode: var(--av-blend);
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+.img-wrapper img:nth-of-type(3) {
+  opacity: 0;
+}
