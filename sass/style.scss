@@ -1,6 +1,7 @@
 /* Styles CSS pour le diaporama */
 
 /*
+Effet "Moody"
 Code basé sur le CSS Duotone Generator
 https://cssduotone.com/
 */
@@ -24,13 +25,13 @@ https://cssduotone.com/
 }
 
 .img-wrapper img {
-  filter: grayscale(100%) contrast(1) blur(var(--blur));
+  filter: grayscale(60%) contrast(1) blur(var(--blur));
   flex: 1 0 100%;
   height: 100%;
   max-width: 100%;
-  /*mix-blend-mode:      var(--ar-blend);*/
+  /*mix-blend-mode: var(--ar-blend);*/
   object-fit: cover;
-  object-position: 50% 50%; /* 50% 50% (centre - default), choix = centre, top ou bottom, right ou left ex: right top*/
+  object-position: center center; 
   opacity: var(--opacite);
   padding: 0;
   position: absolute;
@@ -52,6 +53,54 @@ https://cssduotone.com/
   z-index: 1;
 }
 
-.img-wrapper img:nth-of-type(3) {
-  opacity: 0;
+/* Animation de transitions des images*/
+
+.fondu {
+  animation-name: fondu;
+  animation-duration: 1.4s;
+}
+
+@keyframes fondu {
+  from {opacity: .4}
+  to {opacity: 1}
+}
+
+
+
+/* Les options du  mode admin pour la position de l'image en mode téléphone */
+.gauche-haut {
+  object-position: left top;
+}
+.gauche-centre {
+  object-position: left center;
+}
+.gauche-bas {
+  object-position: left bottom;
+}
+.centre-haut {
+  object-position: center top;
+}
+.centre-centre {
+  object-position: center center;
+}
+.centre-bas {
+  object-position: center bottom;
+}
+.droite-haut {
+  object-position: right top;
+}
+.droite-centre {
+  object-position: right center;
+}
+.droite-bas {
+  object-position: right bottom;
+}
+
+/* Requête média */
+@media screen and (min-width: 800px) {
+  .img-wrapper {
+    img {
+      object-position: center center;
+    }
+  }
 }
