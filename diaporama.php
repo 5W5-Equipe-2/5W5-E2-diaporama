@@ -26,10 +26,11 @@ function mon_enqueue_dia_css_js()
     array(),
     $version_js,
     true
-  ); 
+  );
 
   wp_localize_script('5w5_plugin_diaporama_js', 'diaporama_settings', array(
-    'interval_duration' => get_option('diaporama_interval_duration', 3000)
+    'interval_duree' => get_option('diaporama_interval_duree', 3000),
+    'desaturation' => get_option('diaporama_desaturation', 80)
   ));
 }
 
@@ -51,36 +52,53 @@ function mon_diaporama_settings_page_content()
     return;
   }
 
+  
+  // Obtenez les valeurs actuelles des options de l'extension
+  $interval_duree_defaut = 3000;
+  $interval_duree = get_option('diaporama_interval_duree', $interval_duree_defaut);
+  $desaturation_defaut = 80;
+  $desaturation = get_option('diaporama_desaturation', $desaturation_defaut);
+
   // Enregistrez les paramètres si le formulaire est soumis
   if (isset($_POST['mon_diaporama_submit'])) {
     // Vérifiez si le formulaire a été soumis
-    $interval_duration = intval($_POST['interval-duration']);
-    update_option('diaporama_interval_duration', $interval_duration); // Enregistrez la durée dans les options de l'extension
+    $interval_duree = isset($_POST['interval-duree']) ? intval($_POST['interval-duree']) : $interval_duree;
+    $desaturation = isset($_POST['desaturation']) ? intval($_POST['desaturation']) : $desaturation;
+
+    update_option('diaporama_interval_duree', $interval_duree);
+    update_option('diaporama_desaturation', $desaturation);
   }
 
   // Affichez le formulaire de configuration du diaporama
   $diaporama_theme = get_option('mon_diaporama_theme');
+
 ?>
 
   <h2>Paramètrez le diaporama</h2>
-  <div>
-    <h3>Choississez la durée d'affichage des images</h3>
-    <h4>La durée actuelle d'affichage des images est de <?php echo isset($interval_duration) ? $interval_duration : 3000; ?> ms.</h4>
-    <form id="diaporama-settings-form" method="post">
-      <label for="interval-duration">Nouvelle durée, en millisecondes :</label>
-      <input type="number" id="interval-duration" name="interval-duration" min="100" />
-      
-      <input type="submit" name="mon_diaporama_submit" value="Enregistrer" />
-    </form>
-  </div>
-
+  <form id="diaporama-settings-form" method="post">
+    <div>
+      <h3>Durée d'affichage des images</h3>
+      <label for="interval-duree">en ms</label>
+      <input type="number" id="interval-duree" name="interval-duree" min="100" max="600000" value="<?php echo $interval_duree; ?>" />
+      <h4>(Affichage actuel : <?php echo isset($interval_duree) ? ($interval_duree / 1000) : 3; ?> sec)</h4>
+    </div>
+    <div>
+      <h3>Force du filtre noir et blanc</h3>
+      <label for="desaturation">en %</label>
+      <input type="number" id="desaturation" name="desaturation" min="0" max="100" value="<?php echo isset($desaturation) ? ($desaturation) : $desaturation_defaut; ?>" />
+      <h4>(Saturation : <?php echo isset($desaturation) ? (100 - $desaturation) : 20; ?>%)</h4>
+    </div>
+    <br>
+    <input type="submit" name="mon_diaporama_submit" value="Enregistrer" class="button-primary" />
+  </form>
 
 <?php
-  // Récupérez la durée enregistrée dans les options de l'extension
-  $saved_duration = get_option('diaporama_interval_duration', 3000);
+  // Récupérez les valeurs enregistrées dans les options du formulaire
+  $duree_sauvee = get_option('diaporama_interval_duree', $interval_duree_defaut);
+  $desaturation_sauvee = get_option('diaporama_desaturation', $desaturation_defaut);
 
   // Ajoutez la durée dans une balise script
-  echo "<script>var savedDuration = $saved_duration;</script>";
+  echo "<script>var sauverDuree = " . esc_attr($duree_sauvee) . "; var sauverDesaturation = " . esc_attr($desaturation_sauvee) . ";</script>";
 }
 add_action('admin_menu', 'mon_diaporama_settings_page');
 ?>
