@@ -1,4 +1,4 @@
-(function () {
+document.addEventListener("DOMContentLoaded", function() {
   let diaporama = document.querySelector(".diaporama");
   let images = diaporama.querySelectorAll("img");
   let idx = 0;
