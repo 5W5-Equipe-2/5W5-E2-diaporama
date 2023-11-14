@@ -60,26 +60,25 @@ function mon_diaporama_settings_page_content()
   $desaturation = get_option('diaporama_desaturation', $desaturation_defaut);
 
   $position_centre = 'center center';
-  $position_gauche = 'left center';
+  /* $position_gauche = 'left center';
   $position_droite = 'right center';
   $position_image = get_option('diaporama_image_position', $position_centre);
-
+ */
   // Enregistrez les paramètres si le formulaire est soumis
   if (isset($_POST['mon_diaporama_submit'])) {
     // Vérifiez si le formulaire a été soumis
     $interval_duree = isset($_POST['interval-duree']) ? intval($_POST['interval-duree']) : $interval_duree;
     $desaturation = isset($_POST['desaturation']) ? intval($_POST['desaturation']) : $desaturation;
 
-    $position_image = isset($_POST['image-position']) ? intval($_POST['image-position']) :  $position_centre;
+   /*  $position_image = isset($_POST['image-position']) ? intval($_POST['image-position']) :  $position_centre; */
 
     update_option('diaporama_interval_duree', $interval_duree);
     update_option('diaporama_desaturation', $desaturation);
-    update_option('diaporama_image_position', $position_image);
+  /*   update_option('diaporama_image_position', $position_image); */
   }
 
   // Affichez le formulaire de configuration du diaporama
   $diaporama_theme = get_option('mon_diaporama_theme');
-
 ?>
 
   <h2>Paramètrez le diaporama</h2>
@@ -108,55 +107,80 @@ function mon_diaporama_settings_page_content()
     );
     $image = get_posts($args);
 
-    ?> 
-<!--     Tableau des images du diaporama -->
-<table id="the-list">
-<tr>
-    <th>Image</th>
-    <th>Gauche</th>
-    <th>Centre</th>
-    <th>Droite</th>
-  </tr>
-<tr>
- <?php   // Boucle à travers les articles
-    foreach ($image as $article) : setup_postdata($article);
-      // Récupérer l'URL de l'image thumbnail
-      $thumbnail = get_the_post_thumbnail_url($article->ID, 'thumbnail'); 
-      // Vérifier si l'URL de l'image existe
-      if ($thumbnail) {
     ?>
-       <th><img class="media-icon" src="<?php echo $thumbnail; ?>" alt="<?php the_title(); ?>"> </th>
-       <th> <input type="radio" id="gauche" name="image-position" value="<?php echo $position_gauche; ?>" /></th>
-       <th> <input type="radio" id="centre" name="image-position" value="<?php echo $position_centre; ?>" /></th>
-       <th> <input type="radio" id="droite" name="image-position" value="<?php echo $position_droite; ?>" /></th>
-    </tr>
-    <?php
-      }
+    <!--     Tableau des images du diaporama -->
+    <table id="the-list">
+      <tr>
+        <th>Image</th>
+        <th>Gauche</th>
+        <th>Centre</th>
+        <th>Droite</th>
+      </tr>
+      <?php
+      // Boucle à travers les articles
+      foreach ($image as $article) : setup_postdata($article);
+        // Récupérer l'URL de l'image thumbnail
+        $thumbnail = get_the_post_thumbnail_url($article->ID, 'thumbnail');
+        // Vérifier si l'URL de l'image existe
+        if ($thumbnail) {
+      ?>
+          <tr>
+            <td><img class="media-icon" src="<?php echo $thumbnail; ?>" alt="<?php the_title(); ?>"></td>
+            <td>
+              <input type="radio" name="image-position[<?php echo $article->ID; ?>]" value="left" <?php checked(get_option('diaporama_image_position_' . $article->ID), 'left'); ?>>
+            </td>
+            <td>
+              <input type="radio" name="image-position[<?php echo $article->ID; ?>]" value="center" <?php checked(get_option('diaporama_image_position_' . $article->ID, 'center'), 'center'); ?>>
+            </td>
+            <td>
+              <input type="radio" name="image-position[<?php echo $article->ID; ?>]" value="right" <?php checked(get_option('diaporama_image_position_' . $article->ID), 'right'); ?>>
+            </td>
+          </tr>
+      <?php
+        }
+      endforeach;
+      // Réinitialiser les données de post globales
+      wp_reset_postdata();
+      ?>
+    </table>
 
-    endforeach;
-
-    // Réinitialiser les données de post globales
-    wp_reset_postdata();
-    ?>
-
-</table>
-
-<br>
+    <br>
     <input type="submit" name="mon_diaporama_submit" value="Enregistrer" class="button-primary" />
   </form>
+
+  <?php
+  // Enregistrez les paramètres si le formulaire est soumis
+  if (isset($_POST['mon_diaporama_submit'])) {
+    foreach ($image as $article) {
+      $article_id = $article->ID;
+      $position_image = isset($_POST['image-position'][$article_id]) ? sanitize_text_field($_POST['image-position'][$article_id]) : $position_centre;
+      update_option('diaporama_image_position_' . $article_id, $position_image);
+    }
+  }
+  ?>
 
 <?php
   // Récupérez les valeurs enregistrées dans les options du formulaire
   $duree_sauvee = get_option('diaporama_interval_duree', $interval_duree_defaut);
   $desaturation_sauvee = get_option('diaporama_desaturation', $desaturation_defaut);
-  $position_sauvee = get_option('diaporama_image_position', $position_centre);
 
   // Ajoutez la durée dans une balise script
   echo "<script>
   var sauverDuree = " . esc_attr($duree_sauvee) . "; 
   var sauverDesaturation = " . esc_attr($desaturation_sauvee) . ";
-  var sauverPosition = " . esc_attr($position_sauvee) . ";
-  </script>";
+</script>";
+
+  // Récupérez les options de position pour chaque image
+  $image = get_posts(array('category_name' => 'media', 'posts_per_page' => -1));
+
+  // Ajoutez les options de position dans une balise script
+  echo "<script>";
+  foreach ($image as $article) {
+    $article_id = $article->ID;
+    $position_sauvee = get_option('diaporama_image_position_' . $article_id, $position_centre);
+    echo "var sauverPosition" . $article_id . " = '" . esc_attr($position_sauvee) . "'; ";
+  }
+  echo "</script>";
 }
 add_action('admin_menu', 'mon_diaporama_settings_page');
 ?>
