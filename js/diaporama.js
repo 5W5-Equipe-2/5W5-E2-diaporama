@@ -16,7 +16,7 @@
 
   /* On applique les classes CSS pour les effets sur les images */
   diaporama.classList.add("img-wrapper");
-
+ 
   // On appliquez le filtre de desaturation des images avec la valeur choisit par l'utilisateur
   diaporama.style.filter = `grayscale(${desaturation}%)`;
 

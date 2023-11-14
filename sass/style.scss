@@ -2,7 +2,7 @@
 
 /*
 Effet "Moody"
-Code basé sur le CSS Duotone Generator
+Inspiré du CSS Duotone Generator
 https://cssduotone.com/
 */
 
@@ -34,15 +34,10 @@ https://cssduotone.com/
   margin: 0;
   width: 100%;
 }
-/*
-.filtre-nb img {
-  filter: grayscale(80%);
-}*/
 
 .filtre-contraste img {
   filter: contrast(100%);
 }
-
 
 .img-wrapper::before {
   background-color: var(--avant-plan);
@@ -73,32 +68,14 @@ https://cssduotone.com/
 
 
 /* Les options du  mode admin pour la position de l'image en mode téléphone */
-.gauche-haut {
-  object-position: left top;
-}
-.gauche-centre {
+.gauche img {
   object-position: left center;
 }
-.gauche-bas {
-  object-position: left bottom;
-}
-.centre-haut {
-  object-position: center top;
-}
-.centre-centre {
+.centre img {
   object-position: center center;
 }
-.centre-bas {
-  object-position: center bottom;
-}
-.droite-haut {
-  object-position: right top;
-}
-.droite-centre {
+.droite img {
   object-position: right center;
-}
-.droite-bas {
-  object-position: right bottom;
 }
 
 /* Requête média */
