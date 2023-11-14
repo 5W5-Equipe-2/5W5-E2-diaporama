@@ -8,8 +8,6 @@ https://cssduotone.com/
 
 :root {
   --base: #000000;
-  /*--ar-blend:          screen;*/
-  --blur: 0px;
   --av-blend: exclusion;
   --avant-plan: #1d1d37;
   --opacite: 1;
@@ -25,11 +23,9 @@ https://cssduotone.com/
 }
 
 .img-wrapper img {
-  filter: grayscale(70%) contrast(1) blur(var(--blur));
   flex: 1 0 100%;
   height: 100%;
   max-width: 100%;
-  /*mix-blend-mode: var(--ar-blend);*/
   object-fit: cover;
   object-position: center center; 
   opacity: var(--opacite);
@@ -38,6 +34,15 @@ https://cssduotone.com/
   margin: 0;
   width: 100%;
 }
+/*
+.filtre-nb img {
+  filter: grayscale(80%);
+}*/
+
+.filtre-contraste img {
+  filter: contrast(100%);
+}
+
 
 .img-wrapper::before {
   background-color: var(--avant-plan);

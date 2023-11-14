@@ -1,20 +1,27 @@
-(function() {
+(function () {
   let diaporama = document.querySelector(".diaporama");
   let images = diaporama.querySelectorAll("img");
   let idx = 0;
-
-  let duree = diaporama_settings.interval_duree || 3000; // Durée de l'intervalle par défaut (en millisecondes)
   let diaporamaInterval; // Variable pour stocker l'instance du setIntervalle
 
+  //Les variables modifiables dans le tableau de bord de l'extension, dans WP
+  let duree = diaporama_settings.interval_duree || 1000; // Durée de l'intervalle par défaut (en millisecondes)
   let desaturation = diaporama_settings.desaturation || 80; // % de désaturation
 
-  console.log("desaturation",desaturation);
-  console.log("durée",duree);
+  console.log("desaturation", desaturation);
+  console.log("durée", duree);
 
-  /* On applique la classe CSS pour l'effet "Moody" */
+  /* On enlève la classe CSS pour masquer l'image (avant que le JS s'applique) */
+  diaporama.classList.remove("masquer-image");
+
+  /* On applique les classes CSS pour les effets sur les images */
   diaporama.classList.add("img-wrapper");
 
-  //console.log("durée",duree);
+  // On appliquez le filtre de desaturation des images avec la valeur choisit par l'utilisateur
+  diaporama.style.filter = `grayscale(${desaturation}%)`;
+
+  // Démarrez un minuterie pour changer automatiquement d'image à intervalles réguliers
+  diaporamaInterval = setInterval(afficherImageSuivante, duree);
 
   // Fonction pour afficher l'image suivante et faire rouler le diaporama
   function afficherImageSuivante() {
@@ -36,15 +43,20 @@
     diaporamaInterval = setInterval(afficherImageSuivante, duree); // Créer un nouvel intervalle avec la nouvelle durée
   }
 
-  // Démarrez un minuterie pour changer automatiquement d'image à intervalles réguliers
-  diaporamaInterval = setInterval(afficherImageSuivante, duree);
-
-  // Recherchez un élément qui permettra à l'utilisateur de régler la durée
+  // Recherchez les éléments que l'utilisateur peut changer
   const dureeInput = document.getElementById("interval-duree");
   if (dureeInput) {
     dureeInput.addEventListener("change", function () {
       const newDuree = parseInt(dureeInput.value);
       majDureeInterval(newDuree);
+    });
+  }
+
+  const desaturationInput = document.getElementById("desaturation");
+  if (desaturationInput) {
+    desaturationInput.addEventListener("change", function () {
+      const newDesaturation = parseInt(desaturationInput.value);
+      majDesaturation(newDesaturation);
     });
   }
 })();
