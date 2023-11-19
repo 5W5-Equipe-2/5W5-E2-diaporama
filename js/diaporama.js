@@ -7,10 +7,14 @@
   //Les variables modifiables dans le tableau de bord de l'extension, dans WP
   let duree = diaporama_settings.interval_duree || 1000; // Durée de l'intervalle par défaut (en millisecondes)
   let desaturation = diaporama_settings.desaturation || 80; // % de désaturation
+  //let positionImage = diaporama_settings.image_position; 
+ 
+
 
   console.log("desaturation", desaturation);
   console.log("durée", duree);
-
+//  console.log("position", positionImage);
+ 
   /* On enlève la classe CSS pour masquer l'image (avant que le JS s'applique) */
   diaporama.classList.remove("masquer-image");
 
@@ -19,6 +23,16 @@
  
   // On appliquez le filtre de desaturation des images avec la valeur choisit par l'utilisateur
   diaporama.style.filter = `grayscale(${desaturation}%)`;
+
+/*
+  // Appliquez la propriété object-position à chaque image
+
+images.forEach(function(image, index) {
+  let positionImage = diaporama_settings.image_positions[index];
+  image.style.objectPosition = positionImage;
+});
+
+*/
 
   // Démarrez un minuterie pour changer automatiquement d'image à intervalles réguliers
   diaporamaInterval = setInterval(afficherImageSuivante, duree);
