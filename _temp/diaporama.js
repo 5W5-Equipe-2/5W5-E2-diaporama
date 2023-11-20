@@ -10,27 +10,19 @@
 
   console.log("desaturation", desaturation);
   console.log("durée", duree);
-  console.log("idx", idx);
 
-  const afficherImage = (idx) => {
-    diaporama.classList.remove("masquer-image");
-    /* On applique les classes CSS pour les effets sur les images */
-    diaporama.classList.add("img-wrapper");
-    // On appliquez le filtre de desaturation des images avec la valeur choisit par l'utilisateur
-    diaporama.style.filter = `grayscale(${desaturation}%)`;
+  /* On enlève la classe CSS pour masquer l'image (avant que le JS s'applique) */
+  diaporama.classList.remove("masquer-image");
+ // afficherImageSuivante();
 
-    // Affichez l'image spécifique à l'index passé en paramètre
-    images[idx].style.display = "flex";
+  /* On applique les classes CSS pour les effets sur les images */
+  diaporama.classList.add("img-wrapper");
+ 
+  // On appliquez le filtre de desaturation des images avec la valeur choisit par l'utilisateur
+  diaporama.style.filter = `grayscale(${desaturation}%)`;
 
-     // Démarrez un minuterie pour changer automatiquement d'image à intervalles réguliers
+  // Démarrez un minuterie pour changer automatiquement d'image à intervalles réguliers
   diaporamaInterval = setInterval(afficherImageSuivante, duree);
-};
-
-afficherImage(idx); 
-
-
- // Démarrez un minuterie pour changer automatiquement d'image à intervalles réguliers
- diaporamaInterval = setInterval(afficherImageSuivante, duree);
 
   // Fonction pour afficher l'image suivante et faire rouler le diaporama
   function afficherImageSuivante() {
