@@ -127,13 +127,13 @@ function mon_diaporama_settings_page_content()
           <tr>
             <td><img class="media-icon" src="<?php echo $thumbnail; ?>" alt="<?php the_title(); ?>"></td>
             <td>
-              <input type="radio" name="image-position[<?php echo $article->ID; ?>]" value="left" <?php checked(get_option('diaporama_image_position_' . $article->ID), 'left'); ?>>
+              <input type="radio" name="image-position[<?php echo $article->ID; ?>]" value="left" <?php checked(get_option('diaporama_image_position' . $article->ID), 'left'); ?>>
             </td>
             <td>
-              <input type="radio" name="image-position[<?php echo $article->ID; ?>]" value="center" <?php checked(get_option('diaporama_image_position_' . $article->ID, 'center'), 'center'); ?>>
+              <input type="radio" name="image-position[<?php echo $article->ID; ?>]" value="center" <?php checked(get_option('diaporama_image_position' . $article->ID, 'center'), 'center'); ?>>
             </td>
             <td>
-              <input type="radio" name="image-position[<?php echo $article->ID; ?>]" value="right" <?php checked(get_option('diaporama_image_position_' . $article->ID), 'right'); ?>>
+              <input type="radio" name="image-position[<?php echo $article->ID; ?>]" value="right" <?php checked(get_option('diaporama_image_position' . $article->ID), 'right'); ?>>
             </td>
           </tr>
       <?php
@@ -154,7 +154,7 @@ function mon_diaporama_settings_page_content()
     foreach ($image as $article) {
       $article_id = $article->ID;
       $position_image = isset($_POST['image-position'][$article_id]) ? sanitize_text_field($_POST['image-position'][$article_id]) : $position_centre;
-      update_option('diaporama_image_position_' . $article_id, $position_image);
+      update_option('diaporama_image_position' . $article_id, $position_image);
     }
   }
   ?>
@@ -177,7 +177,7 @@ function mon_diaporama_settings_page_content()
   echo "<script>";
   foreach ($image as $article) {
     $article_id = $article->ID;
-    $position_sauvee = get_option('diaporama_image_position_' . $article_id, $position_centre);
+    $position_sauvee = get_option('diaporama_image_position' . $article_id, $position_centre);
     echo "var sauverPosition" . $article_id . " = '" . esc_attr($position_sauvee) . "'; ";
   }
   echo "</script>";

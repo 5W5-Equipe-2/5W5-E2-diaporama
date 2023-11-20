@@ -8,8 +8,12 @@
   let duree = diaporama_settings.interval_duree || 1000; // Durée de l'intervalle par défaut (en millisecondes)
   let desaturation = diaporama_settings.desaturation || 80; // % de désaturation
 
+  let positionImage = diaporama_settings.image_position;
+
   console.log("desaturation", desaturation);
   console.log("durée", duree);
+  console.log("images", images);
+  console.log("positionImage", positionImage);
 
   /* On enlève la classe CSS pour masquer l'image (avant que le JS s'applique) */
   diaporama.classList.remove("masquer-image");
