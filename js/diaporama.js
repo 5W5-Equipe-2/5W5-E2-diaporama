@@ -4,16 +4,16 @@
   let idx = 0;
   let diaporamaInterval; // Variable pour stocker l'instance du setIntervalle
 
-  //Les variables modifiables dans le tableau de bord de l'extension, dans WP
-  let duree = diaporama_settings.interval_duree || 1000; // Durée de l'intervalle par défaut (en millisecondes)
-  let desaturation = diaporama_settings.desaturation || 80; // % de désaturation
+ // Les variables modifiables dans le tableau de bord de l'extension, dans WP
+let duree = diaporama_settings.interval_duree || 1000; // Durée de l'intervalle par défaut (en millisecondes)
+let desaturation = diaporama_settings.desaturation || 80; // % de désaturation
 
-  let positionImage = diaporama_settings.image_position;
+let positionImage = diaporama_settings.image_positions; // Utilisez la même clé que dans PHP
 
-  console.log("desaturation", desaturation);
-  console.log("durée", duree);
-  console.log("images", images);
-  console.log("positionImage", positionImage);
+console.log("desaturation", desaturation);
+console.log("durée", duree);
+console.log("images", images);
+console.log("positionImage", positionImage);
 
   /* On enlève la classe CSS pour masquer l'image (avant que le JS s'applique) */
   diaporama.classList.remove("masquer-image");
