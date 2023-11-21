@@ -1,68 +1,75 @@
-(function () {
+document.addEventListener("DOMContentLoaded", function () {
   let diaporama = document.querySelector(".diaporama");
-  let images = document.querySelectorAll(".diaporama-media");
+  let images = diaporama.querySelectorAll("img");
   let idx = 0;
-  let diaporamaInterval; // Variable pour stocker l'instance du setIntervalle
+  let diaporamaInterval;
 
- // Les variables modifiables dans le tableau de bord de l'extension, dans WP
-let duree = diaporama_settings.interval_duree || 1000; // Durée de l'intervalle par défaut (en millisecondes)
-let desaturation = diaporama_settings.desaturation || 80; // % de désaturation
+  /******************************************************************************
+  Les variables modifiables dans le tableau de bord de l'extension, dans WP
+ ********************************************************************************/
+  let duree = diaporama_settings.interval_duree || 1000; // Durée de l'intervalle par défaut (en millisecondes)
+  let desaturation = diaporama_settings.desaturation || 80; // % de désaturation
+  let positionImage = diaporama_settings.image_positions; // Objet avec les ID des images et leur positionnement CSS (object-position)
 
-let positionImage = diaporama_settings.image_positions; // Utilisez la même clé que dans PHP
-
-console.log("desaturation", desaturation);
-console.log("durée", duree);
-console.log("images", images);
-console.log("positionImage", positionImage);
-console.log("positionImage", typeof positionImage);
-
+  /******************************************************************************
+  Le programme
+ ********************************************************************************/
 
   /* On enlève la classe CSS pour masquer l'image (avant que le JS s'applique) */
   diaporama.classList.remove("masquer-image");
 
-  /* On applique les classes CSS pour les effets sur les images */
+  /* On applique la classe CSS pour les effets sur les images */
   diaporama.classList.add("img-wrapper");
- 
-  // On appliquez le filtre de desaturation des images avec la valeur choisit par l'utilisateur
+
+  // On applique le filtre de désaturation des images avec la valeur choisie par l'utilisateur
   diaporama.style.filter = `grayscale(${desaturation}%)`;
 
-  // Démarrez un minuterie pour changer automatiquement d'image à intervalles réguliers
+  /* On boucle à travers les images pour appliquer les positions (objetc-position) CSS
+  choisies par l'utilisateur */
+  images.forEach((image) => {
+    // Obtenir l'ID de l'image à partir de l'attribut "data-image-id" (template-part categorie-media.php)
+    let imageId = image.getAttribute("data-image-id");
+
+    // Vérifier si l'ID de l'image existe dans positionImage
+    if (positionImage.hasOwnProperty(imageId)) {
+      // Appliquer la position CSS à l'image
+      image.style.objectPosition = positionImage[imageId];
+    } else {
+      console.warn(
+        `Aucune position CSS trouvée pour l'image avec l'ID ${imageId}`
+      );
+    }
+  });
+
+  /* On démarre une minuterie pour changer automatiquement d'image à intervalles réguliers
+  avec la durée choisie par l'utilisateur */
   diaporamaInterval = setInterval(afficherImageSuivante, duree);
 
-  // Fonction pour afficher l'image suivante et faire rouler le diaporama
+  /**
+   * Affiche l'image suivante dans le diaporama
+   *
+   * @function
+   * @name afficherImageSuivante
+   * @description Cette fonction masque toutes les images du diaporama, passe à l'image suivante
+   * (ou revient à la première) et affiche l'image suivante avec une animation.
+   *
+   * @param {NodeList} images - La liste des éléments d'image du diaporama.
+   * @param {number} idx - L'indice de l'image actuellement affichée.
+   *
+   * @returns {void}
+   */
   function afficherImageSuivante() {
-    // Masquez l'image actuelle avec animation
-    images[idx].classList.remove("fondu");
-    images[idx].style.display = "none";
+    // Masquer toutes les images
+    images.forEach((image) => {
+      image.style.display = "none";
+      image.classList.remove("fondu");
+    });
 
-    idx = (idx + 1) % images.length; // Passez à l'image suivante (ou revenez à la première si nécessaire)
+    // Passer à l'image suivante (ou revenir à la première si nécessaire)
+    idx = (idx + 1) % images.length;
 
-    // Affichez l'image suivante avec animation
+    // Affichez l'image suivante
     images[idx].style.display = "flex";
     images[idx].classList.add("fondu");
   }
-
-  // Fonction pour mettre à jour la durée de l'intervalle
-  function majDureeInterval(newDuree) {
-    duree = newDuree;
-    clearInterval(diaporamaInterval); // Effacer l'intervalle précédent
-    diaporamaInterval = setInterval(afficherImageSuivante, duree); // Créer un nouvel intervalle avec la nouvelle durée
-  }
-
-  // Recherchez les éléments que l'utilisateur peut changer
-  const dureeInput = document.getElementById("interval-duree");
-  if (dureeInput) {
-    dureeInput.addEventListener("change", function () {
-      const newDuree = parseInt(dureeInput.value);
-      majDureeInterval(newDuree);
-    });
-  }
-
-  const desaturationInput = document.getElementById("desaturation");
-  if (desaturationInput) {
-    desaturationInput.addEventListener("change", function () {
-      const newDesaturation = parseInt(desaturationInput.value);
-      majDesaturation(newDesaturation);
-    });
-  }
-})();
+});
