@@ -1,6 +1,6 @@
 (function () {
   let diaporama = document.querySelector(".diaporama");
-  let images = diaporama.querySelectorAll("img");
+  let images = document.querySelectorAll(".diaporama-media");
   let idx = 0;
   let diaporamaInterval; // Variable pour stocker l'instance du setIntervalle
 
