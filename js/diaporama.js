@@ -9,6 +9,8 @@ document.addEventListener("DOMContentLoaded", function () {
  ********************************************************************************/
   let duree = diaporama_settings.interval_duree || 1000; // Durée de l'intervalle par défaut (en millisecondes)
   let desaturation = diaporama_settings.desaturation || 80; // % de désaturation
+  let contraste = diaporama_settings.contraste || 100; // % de contraste
+  let luminosite = diaporama_settings.luminosite || 100; // % de contraste
   let positionImage = diaporama_settings.image_positions; // Objet avec les ID des images et leur positionnement CSS (object-position)
 
   /******************************************************************************
@@ -22,7 +24,8 @@ document.addEventListener("DOMContentLoaded", function () {
   diaporama.classList.add("img-wrapper");
 
   // On applique le filtre de désaturation des images avec la valeur choisie par l'utilisateur
-  diaporama.style.filter = `grayscale(${desaturation}%)`;
+  // On applique le filtre de contrasten des images avec la valeur choisie par l'utilisateur
+  diaporama.style.filter = `grayscale(${desaturation}%) contrast(${contraste}%) brightness(${luminosite}%)`;
 
   /* On boucle à travers les images pour appliquer les positions (objetc-position) CSS
   choisies par l'utilisateur */

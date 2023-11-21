@@ -35,8 +35,11 @@ function mon_enqueue_dia_css_js()
     wp_localize_script('5w5_plugin_diaporama_js', 'diaporama_settings', array(
       'interval_duree' => get_option('diaporama_interval_duree', 3000),
       'desaturation' => get_option('diaporama_desaturation', 80),
+      'contraste' => get_option('diaporama_contraste', 100),
+      'luminosite' => get_option('diaporama_luminosite', 100),
 
-      'image_positions' => array_reduce(get_posts(array('category_name' => 'media', 'posts_per_page' => -1)), function ($acc, $article) {
+      'image_positions' => array_reduce(get_posts(array('category_name' => 'media', 'posts_per_page' => -1)), 
+      function ($acc, $article) {
           $article_id = $article->ID;
   
           // Obtenir l'ID de l'image en vedette
@@ -78,12 +81,18 @@ function mon_diaporama_settings_page_content()
     $interval_duree = get_option('diaporama_interval_duree', $interval_duree_defaut);
     $desaturation_defaut = 80;
     $desaturation = get_option('diaporama_desaturation', $desaturation_defaut);
+    $contraste_defaut = 100;
+    $contraste = get_option('diaporama_contraste', $contraste_defaut);
+    $luminosite_defaut = 100;
+    $luminosite = get_option('diaporama_luminosite', $luminosite_defaut);
     $position_centre = 'center center';
 
     // Enregistrez les paramètres si le formulaire est soumis
     if (isset($_POST['mon_diaporama_submit'])) {
         $interval_duree = isset($_POST['interval-duree']) ? intval($_POST['interval-duree']) : $interval_duree;
         $desaturation = isset($_POST['desaturation']) ? intval($_POST['desaturation']) : $desaturation;
+        $contraste = isset($_POST['contraste']) ? intval($_POST['contraste']) : $contraste;
+        $luminosite = isset($_POST['luminosite']) ? intval($_POST['luminosite']) : $luminosite;
 
         foreach (get_posts(array('category_name' => 'media', 'posts_per_page' => -1)) as $article) {
             $article_id = $article->ID;
@@ -93,13 +102,15 @@ function mon_diaporama_settings_page_content()
 
         update_option('diaporama_interval_duree', $interval_duree);
         update_option('diaporama_desaturation', $desaturation);
+        update_option('diaporama_contraste', $contraste);
+        update_option('diaporama_luminosite', $luminosite);
     }
 
     // Afficher le formulaire de configuration du diaporama
     $diaporama_theme = get_option('mon_diaporama_theme');
 ?>
 
-  <h2>Paramètrez le diaporama</h2>
+  <h2>Paramètrez le diaporama et l'esthétique des images</h2>
   <form id="diaporama-settings-form" method="post">
     <div>
       <h3>Durée d'affichage des images</h3>
@@ -112,6 +123,16 @@ function mon_diaporama_settings_page_content()
       <label for="desaturation">en %</label>
       <input type="number" id="desaturation" name="desaturation" min="0" max="100" value="<?php echo isset($desaturation) ? ($desaturation) : $desaturation_defaut; ?>" />
       <h4>(Saturation : <?php echo isset($desaturation) ? (100 - $desaturation) : 20; ?>%)</h4>
+    </div>
+    <div>
+      <h3>Contraste des images</h3>
+      <label for="contraste">en %</label>
+      <input type="number" id="contraste" name="contraste" min="0" max="1000" value="<?php echo isset($contraste) ? ($contraste) : $contraste_defaut; ?>" />
+    </div>
+    <div>
+      <h3>Luminosité des images</h3>
+      <label for="luminosite">en %</label>
+      <input type="number" id="luminosite" name="luminosite" min="0" max="1000" value="<?php echo isset($luminosite) ? ($luminosite) : $luminosite_defaut; ?>" />
     </div>
     <br>
 
@@ -171,6 +192,8 @@ function mon_diaporama_settings_page_content()
   if (isset($_POST['mon_diaporama_submit'])) {
     $interval_duree = isset($_POST['interval-duree']) ? intval($_POST['interval-duree']) : $interval_duree;
     $desaturation = isset($_POST['desaturation']) ? intval($_POST['desaturation']) : $desaturation;
+    $contraste = isset($_POST['contraste']) ? intval($_POST['contraste']) : $contraste;
+    $luminosite = isset($_POST['luminosite']) ? intval($_POST['luminosite']) : $luminosite;
 
     foreach (get_posts(array('category_name' => 'media', 'posts_per_page' => -1)) as $article) {
         $article_id = $article->ID;
@@ -190,6 +213,8 @@ function mon_diaporama_settings_page_content()
 
     update_option('diaporama_interval_duree', $interval_duree);
     update_option('diaporama_desaturation', $desaturation);
+    update_option('diaporama_contraste', $contraste);
+    update_option('diaporama_luminosite', $luminosite);
 }
 }
 add_action('admin_menu', 'mon_diaporama_settings_page');
