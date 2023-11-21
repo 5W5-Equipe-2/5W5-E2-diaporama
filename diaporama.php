@@ -1,12 +1,17 @@
 <?php
 /*
  * Plugin name: Diaporama 5W5
- * Description: Cette extension diaporama permet d'afficher les images de la classe Média et de contrôler certains paramètres d'affichage 
+ * Description: Cette extension diaporama permet de boucler dans les images de la classe Média 
+ * et de contrôler certains paramètres d'affichage choisis par l'utilisateur
  * Version: 1.0
  * Author: Noémie da Silva, Victor Desjardins, Vincent Gélinas, Vincent Hum, Dac Anne Nguyen
  * Author URI: https://github.com/5W5-Equipe-2
  */
 
+ /**
+ * Enregistre les fichiers CSS et JavaScript pour le diaporama.
+ *
+ */
 function mon_enqueue_dia_css_js()
 {
     $version_css = filemtime(plugin_dir_path(__FILE__) . "style.css");
@@ -28,14 +33,27 @@ function mon_enqueue_dia_css_js()
     );
 
     wp_localize_script('5w5_plugin_diaporama_js', 'diaporama_settings', array(
-        'interval_duree' => get_option('diaporama_interval_duree', 3000),
-        'desaturation' => get_option('diaporama_desaturation', 80),
-        'image_positions' => array_reduce(get_posts(array('category_name' => 'media', 'posts_per_page' => -1)), function ($acc, $article) {
-            $article_id = $article->ID;
-            $acc[$article_id] = get_option('diaporama_image_position' . $article_id, 'center center');
-            return $acc;
-        }, array())
-    ));
+      'interval_duree' => get_option('diaporama_interval_duree', 3000),
+      'desaturation' => get_option('diaporama_desaturation', 80),
+
+      'image_positions' => array_reduce(get_posts(array('category_name' => 'media', 'posts_per_page' => -1)), function ($acc, $article) {
+          $article_id = $article->ID;
+  
+          // Obtenir l'ID de l'image en vedette
+          $image_id = get_post_thumbnail_id($article_id);
+  
+          // Vérifier si l'image en vedette existe
+          if ($image_id) {
+              // Récupérer la position de l'image en vedette
+              $position = get_option('diaporama_image_position' . $image_id, 'center center');
+  
+              // Ajouter l'entrée à l'accumulateur
+              $acc[$image_id] = $position;
+          }
+  
+          return $acc;
+      }, array())
+  ));
 }
 
 add_action('wp_enqueue_scripts', 'mon_enqueue_dia_css_js');
@@ -50,17 +68,16 @@ function mon_diaporama_settings_page()
 
 function mon_diaporama_settings_page_content()
 {
-    // Vérifiez les autorisations de l'utilisateur
+    // Vérifier les autorisations de l'utilisateur
     if (!current_user_can('manage_options')) {
         return;
     }
 
-    // Obtenez les valeurs actuelles des options de l'extension
+    // Obtenir les valeurs actuelles des options de l'extension
     $interval_duree_defaut = 3000;
     $interval_duree = get_option('diaporama_interval_duree', $interval_duree_defaut);
     $desaturation_defaut = 80;
     $desaturation = get_option('diaporama_desaturation', $desaturation_defaut);
-
     $position_centre = 'center center';
 
     // Enregistrez les paramètres si le formulaire est soumis
@@ -78,7 +95,7 @@ function mon_diaporama_settings_page_content()
         update_option('diaporama_desaturation', $desaturation);
     }
 
-    // Affichez le formulaire de configuration du diaporama
+    // Afficher le formulaire de configuration du diaporama
     $diaporama_theme = get_option('mon_diaporama_theme');
 ?>
 
@@ -118,7 +135,7 @@ function mon_diaporama_settings_page_content()
         <th>Droite</th>
       </tr>
       <?php
-      // Boucle à travers les articles
+      // Boucler à travers les articles
       foreach ($image as $article) : setup_postdata($article);
         // Récupérer l'URL de l'image thumbnail
         $thumbnail = get_the_post_thumbnail_url($article->ID, 'thumbnail');
@@ -150,19 +167,30 @@ function mon_diaporama_settings_page_content()
   </form>
 
   <?php
-  // Enregistrez les paramètres si le formulaire est soumis
+  // Enregistrer les paramètres si le formulaire est soumis
   if (isset($_POST['mon_diaporama_submit'])) {
-    foreach ($image as $article) {
-      $article_id = $article->ID;
-      $position_image = isset($_POST['image-position'][$article_id]) ? sanitize_text_field($_POST['image-position'][$article_id]) : $position_centre;
-      update_option('diaporama_image_position' . $article_id, $position_image);
-    }
-  }
-  
-  // Récupérez les valeurs enregistrées dans les options du formulaire
-  $duree_sauvee = get_option('diaporama_interval_duree', $interval_duree_defaut);
-  $desaturation_sauvee = get_option('diaporama_desaturation', $desaturation_defaut);
+    $interval_duree = isset($_POST['interval-duree']) ? intval($_POST['interval-duree']) : $interval_duree;
+    $desaturation = isset($_POST['desaturation']) ? intval($_POST['desaturation']) : $desaturation;
 
+    foreach (get_posts(array('category_name' => 'media', 'posts_per_page' => -1)) as $article) {
+        $article_id = $article->ID;
+
+        // Obtenir l'ID de l'image en vedette
+        $image_id = get_post_thumbnail_id($article_id);
+
+        // Vérifier si l'image en vedette existe
+        if ($image_id) {
+            // Obtenir la position de l'image à partir du formulaire
+            $position_image = isset($_POST['image-position'][$article_id]) ? sanitize_text_field($_POST['image-position'][$article_id]) : $position_centre;
+
+            // Enregistrer la position de l'image en vedette
+            update_option('diaporama_image_position' . $image_id, $position_image);
+        }
+    }
+
+    update_option('diaporama_interval_duree', $interval_duree);
+    update_option('diaporama_desaturation', $desaturation);
+}
 }
 add_action('admin_menu', 'mon_diaporama_settings_page');
 ?>

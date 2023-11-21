@@ -24,13 +24,13 @@ https://cssduotone.com/
 .img-wrapper img {
   flex: 1 0 100%;
   height: 100%;
+  margin: 0;
   max-width: 100%;
   object-fit: cover;
   object-position: center center;
   opacity: var(--opacite);
   padding: 0;
   position: absolute;
-  margin: 0;
   width: 100%;
 }
 
@@ -55,7 +55,7 @@ https://cssduotone.com/
 /* Animation de transitions des images*/
 .fondu {
   animation-name: fondu;
-  animation-duration: 1.4s;
+  animation-duration: 5000ms;
 }
 
 @keyframes fondu {
@@ -66,19 +66,6 @@ https://cssduotone.com/
     opacity: 1;
   }
 }
-/* Les options du  mode admin pour la position de l'image en mode téléphone */
-.gauche img {
-  object-position: left center;
-}
-
-.centre img {
-  object-position: center center;
-}
-
-.droite img {
-  object-position: right center;
-}
-
 /* Requête média */
 @media screen and (min-width: 800px) {
   .img-wrapper img {
