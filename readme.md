@@ -1,18 +1,15 @@
-## Extension pour WordPress : un diaporama pour le thème 5W5-E2 
+## Extension pour WordPress : un diaporama pour la page d'accueil du thème 5W5-E2 
 ### Auteurs : Noémie da Silva, Victor Desjardins, Vincent Gélinas, Vincent Hum, Dac Anne Nguyen
 ### Titre du projet : Refonte du site web TIM Maisonneuve
 ### Professeur : Eddy Martin & Jonathan Martel, TIM, Collège de Maisonneuve, 2023
 
-#### Description :  Le diaporama permet d'afficher les images de mise en avant de la catégorie Média
-- Récupérer les images de mise en avant de :
-  - la catégorie->slug === 'media'
-  - la classe .diaporama
-  - Les images ne sont pas coupées ni distortionnées
+#### Description :  Le diaporama permet d'afficher les images de mise en avant de la catégorie Média 
+- l'extension est appellé dans front-page.php avec le shortcode [diaporama]
 
 - Le mode administrateur permet de :
-  - Contrôler la propriété css object-position selon la taille de l'écran
-  - Contrôler les propriétés principales de l'effet visuel 
-  - Contrôler l'animation du diaporama 
+  - Contrôler la propriété css object-position pour chacune des images, pour l'affichage sur téléphone
+  - Contrôler les propriétés principales de l'effet visuel (flitre noir et blanc, contraste, luminosité)
+  - Contrôler le temps d'affichage des images 
 
 🔷 🔶 🔷
 - Déploiement du projet sur le serveur (ramnode) :

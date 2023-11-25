@@ -1,14 +1,13 @@
 /* Styles CSS pour le diaporama */
 
 /*
-Code basé sur le CSS Duotone Generator
+Effet "Moody"
+Inspiré du CSS Duotone Generator
 https://cssduotone.com/
 */
 
 :root {
   --base: #000000;
-  /*--ar-blend:          screen;*/
-  --blur: 0px;
   --av-blend: exclusion;
   --avant-plan: #1d1d37;
   --opacite: 1;
@@ -24,17 +23,15 @@ https://cssduotone.com/
 }
 
 .img-wrapper img {
-  filter: grayscale(100%) contrast(1) blur(var(--blur));
   flex: 1 0 100%;
   height: 100%;
+  margin: 0;
   max-width: 100%;
-  /*mix-blend-mode:      var(--ar-blend);*/
   object-fit: cover;
-  object-position: 50% 50%; /* 50% 50% (centre - default), choix = centre, top ou bottom, right ou left ex: right top*/
+  object-position: center center; 
   opacity: var(--opacite);
   padding: 0;
   position: absolute;
-  margin: 0;
   width: 100%;
 }
 
@@ -52,6 +49,24 @@ https://cssduotone.com/
   z-index: 1;
 }
 
-.img-wrapper img:nth-of-type(3) {
-  opacity: 0;
+
+/* Animation de transitions des images*/
+.fondu {
+  animation-name: fondu;
+  animation-duration: 5000ms;
+}
+
+@keyframes fondu {
+  from {opacity: 0.4}
+  to {opacity: 1}
+}
+
+
+/* Requête média */
+@media screen and (min-width: 800px) {
+  .img-wrapper {
+    img {
+      object-position: center center;
+    }
+  }
 }
