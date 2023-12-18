@@ -12,7 +12,6 @@
  * Enregistre les fichiers CSS et JavaScript pour le diaporama.
  *
  */
-
 function mon_enqueue_dia_css_js()
 {
     $version_css = filemtime(plugin_dir_path(__FILE__) . "style.css");
@@ -142,7 +141,7 @@ function mon_diaporama_settings_page_content()
     <br>
 
     <h2 style="padding-bottom:0.2rem; margin-bottom:0.3rem;font-size:1.4rem">Positionnement des images pour les petits écrans</h2>
-    <h4 style="padding-top:0; margin-top:0; margin-bottom:1rem;font-size:1rem; olor:hsl(200, 18%, 40%);">Choisissez si les images s'allignent à gauche, au centre ou à droite</h4>
+    <h4 style="padding-top:0; margin-top:0; margin-bottom:1rem;font-size:1rem; color:hsl(200, 18%, 40%);">Choisissez si les images s'allignent à gauche, au centre ou à droite</h4>
     <?php
     // Récupérer les articles de la catégorie 'media'
     $args = array(
@@ -190,7 +189,7 @@ function mon_diaporama_settings_page_content()
     </table>
     <hr>
     <br>
-    <input style="background-color:hsl(236, 18%, 19%); color:hsl(30, 100%, 99%);" type="submit" name="mon_diaporama_submit" value="Enregistrer" class="button-primary" />
+    <input type="submit" name="mon_diaporama_submit" value="Enregistrer" class="button-primary" />
   
   </form>
   </div>
