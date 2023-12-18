@@ -109,35 +109,39 @@ function mon_diaporama_settings_page_content()
     // Afficher le formulaire de configuration du diaporama
     $diaporama_theme = get_option('mon_diaporama_theme');
 ?>
-
-  <h2>Paramètrez le diaporama et l'esthétique des images</h2>
+<div style="padding:1rem; display:flex; flex-direction:column">
+  <h1 style="line-height:120%" class="wp-heading-inline">Paramètrez le diaporama et l'esthétique des images</h1>
   <form id="diaporama-settings-form" method="post">
     <div>
       <h3>Durée d'affichage des images</h3>
       <label for="interval-duree">en ms</label>
       <input type="number" id="interval-duree" name="interval-duree" min="100" max="600000" value="<?php echo $interval_duree; ?>" />
-      <h4>(Affichage actuel : <?php echo isset($interval_duree) ? ($interval_duree / 1000) : 3; ?> sec)</h4>
+      <h4 style="color:hsl(200, 18%, 40%);">(Affichage actuel : <?php echo isset($interval_duree) ? ($interval_duree / 1000) : 3; ?> sec)</h4>
+   <hr>
     </div>
     <div>
       <h3>Force du filtre noir et blanc</h3>
       <label for="desaturation">en %</label>
       <input type="number" id="desaturation" name="desaturation" min="0" max="100" value="<?php echo isset($desaturation) ? ($desaturation) : $desaturation_defaut; ?>" />
-      <h4>(Saturation : <?php echo isset($desaturation) ? (100 - $desaturation) : 20; ?>%)</h4>
+      <h4 style="color:hsl(200, 18%, 40%);">(Saturation : <?php echo isset($desaturation) ? (100 - $desaturation) : 20; ?>%)</h4>
+      <hr>
     </div>
     <div>
       <h3>Contraste des images</h3>
       <label for="contraste">en %</label>
       <input type="number" id="contraste" name="contraste" min="0" max="1000" value="<?php echo isset($contraste) ? ($contraste) : $contraste_defaut; ?>" />
+      <hr>
     </div>
     <div>
       <h3>Luminosité des images</h3>
       <label for="luminosite">en %</label>
       <input type="number" id="luminosite" name="luminosite" min="0" max="1000" value="<?php echo isset($luminosite) ? ($luminosite) : $luminosite_defaut; ?>" />
+      <hr>
     </div>
     <br>
 
-    <h3>Positionnement des images pour les petits écrans</h3>
-    <h4>Choisissez si les images s'allignent à gauche, au centre ou à droite</h4>
+    <h2 style="padding-bottom:0.2rem; margin-bottom:0.3rem;font-size:1.4rem">Positionnement des images pour les petits écrans</h2>
+    <h4 style="padding-top:0; margin-top:0; margin-bottom:1rem;font-size:1rem; color:hsl(200, 18%, 40%);">Choisissez si les images s'allignent à gauche, au centre ou à droite</h4>
     <?php
     // Récupérer les articles de la catégorie 'media'
     $args = array(
@@ -148,12 +152,12 @@ function mon_diaporama_settings_page_content()
 
     ?>
     <!--     Tableau des images du diaporama -->
-    <table id="the-list">
-      <tr>
-        <th>Image</th>
-        <th>Gauche</th>
-        <th>Centre</th>
-        <th>Droite</th>
+    <table id="the-list" style="text-align:center;">
+      <tr style="font-size:1rem;">
+        <th style="padding:1rem;">Image</th>
+        <th style="padding:1rem;">Gauche</th>
+        <th style="padding:1rem;">Centre</th>
+        <th style="padding:1rem;">Droite</th>
       </tr>
       <?php
       // Boucler à travers les articles
@@ -164,8 +168,8 @@ function mon_diaporama_settings_page_content()
         if ($thumbnail) {
       ?>
           <tr>
-            <td><img class="media-icon" src="<?php echo $thumbnail; ?>" alt="<?php the_title(); ?>"></td>
-            <td>
+            <td style="padding:1rem;"><img class="media-icon" src="<?php echo $thumbnail; ?>" alt="<?php the_title(); ?>"></td>
+            <td style="padding:1rem;">
               <input type="radio" name="image-position[<?php echo $article->ID; ?>]" value="left center" <?php checked(get_option('diaporama_image_position' . $article->ID), 'left center'); ?>>
             </td>
             <td>
@@ -175,6 +179,7 @@ function mon_diaporama_settings_page_content()
               <input type="radio" name="image-position[<?php echo $article->ID; ?>]" value="right center" <?php checked(get_option('diaporama_image_position' . $article->ID), 'right center'); ?>>
             </td>
           </tr>
+          
       <?php
         }
       endforeach;
@@ -182,11 +187,12 @@ function mon_diaporama_settings_page_content()
       wp_reset_postdata();
       ?>
     </table>
-
+    <hr>
     <br>
     <input type="submit" name="mon_diaporama_submit" value="Enregistrer" class="button-primary" />
+  
   </form>
-
+  </div>
   <?php
   // Enregistrer les paramètres si le formulaire est soumis
   if (isset($_POST['mon_diaporama_submit'])) {
